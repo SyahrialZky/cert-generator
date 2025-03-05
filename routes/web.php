@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\PesertaController;
+use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +16,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
+// Route::get('/', function () {
+//     return view('index');
+// });
+
+Route::prefix('certificates')->group(function () {
+    Route::get('/', [CertificateController::class, 'index'])->name('certificates.index');
+    Route::get('/data', [CertificateController::class, 'getData'])->name('certificates.data');
+    Route::post('/store', [CertificateController::class, 'store'])->name('certificates.store');
+    Route::get('/show/{id}', [CertificateController::class, 'show'])->name('certificates.show');
+    Route::put('/update/{id}', [CertificateController::class, 'update'])->name('certificates.update');
+    Route::delete('/delete/{id}', [CertificateController::class, 'destroy'])->name('certificates.destroy');
 });
+
+Route::get('/peserta', [PesertaController::class, 'index'])->name('peserta.index');
+Route::get('/event', [EventController::class, 'index'])->name('event.index');

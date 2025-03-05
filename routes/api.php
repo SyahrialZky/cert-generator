@@ -21,5 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::apiResource('certificates', CertificateController::class);
-Route::apiResource('templates', TemplateController::class);
+// Route::apiResource('certificates', CertificateController::class);
+// Route::apiResource('templates', TemplateController::class);

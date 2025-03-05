@@ -11,7 +11,7 @@
   <meta name="twitter:site" content="@preline">
   <meta name="twitter:creator" content="@preline">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Email sender">
+  <meta name="twitter:title" content="Certificate Generator">
   <meta name="twitter:description" content="Comprehensive overview with charts, tables, and a streamlined dashboard layout for easy data visualization and analysis.">
   <meta name="twitter:image" content="https://preline.co/assets/img/og-image.png">
 
@@ -19,12 +19,12 @@
   <meta property="og:locale" content="en_US">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Preline">
-  <meta property="og:title" content="Email sender">
+  <meta property="og:title" content="Certificate Generator">
   <meta property="og:description" content="Comprehensive overview with charts, tables, and a streamlined dashboard layout for easy data visualization and analysis.">
   <meta property="og:image" content="https://preline.co/assets/img/og-image.png">
 
   <!-- Title -->
-  <title>Email sender</title>
+  <title>Certificate Generator</title>
 
   <!-- Favicon -->
   <link rel="shortcut icon" href="../../favicon.ico">
