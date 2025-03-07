@@ -26,3 +26,5 @@ Route::apiResource('templates', TemplateController::class);
 
 // Route::post('/generate-certificate', [CertificateController::class, 'generateCertificate']);
 Route::post('/generate-certificate', [CertificateController::class, 'generateCertificate']);
+// Route::apiResource('certificates', CertificateController::class);
+// Route::apiResource('templates', TemplateController::class);

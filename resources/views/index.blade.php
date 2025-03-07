@@ -22,33 +22,14 @@
 
         <div class="flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold">User Email List</h1>
-                <p class="text-gray-400">Complete Collection of User Email Addresses</p>
+                <h1 class="text-3xl font-bold">Certificates List</h1>
+                <p class="text-gray-400">Complete Collection of Certificates</p>
             </div>
             <button class="bg-orange-500 hover:bg-orange-700 text-white px-4 py-2 rounded flex items-center"
                 aria-haspopup="dialog" aria-expanded="false" aria-controls="modal-create" data-hs-overlay="#modal-create"><i
                     class="fas fa-plus mr-2"></i> Create</button>
         </div>
-        <div class="mt-6 flex space-x-4">
-            <button class="bg-black text-white px-4 py-2 rounded flex items-center" id='sendSelected'>
-                <i class="fas fa-paper-plane mr-2"></i> Kirim Email
-            </button>
-            <button type="button"
-                class="border border-black text-black px-4 py-2 rounded flex items-center hover:bg-black hover:text-white"
-                aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-scale-animation-modal"
-                data-hs-overlay="#hs-scale-animation-modal">
-                <i class="fas fa-users mr-2"></i> Kirim by wilayah
-            </button>
-            <button
-                class="border border-black text-black px-4 py-2 rounded flex items-center hover:bg-black hover:text-white">
-                <i class="fas fa-user-friends mr-2"></i> Kirim semua client
-            </button>
-            <button type="button"
-                class="border border-black text-black px-4 py-2 rounded flex items-center hover:bg-black hover:text-white"
-                aria-haspopup="dialog" aria-expanded="false" aria-controls="importModal" data-hs-overlay="#importModal">
-                <i class="fas fa-file-import mr-2"></i> Import File
-            </button>
-        </div>
+        
 
         <div id="importModal"
             class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
@@ -255,20 +236,26 @@
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
                 <div class="overflow-x-auto bg-white shadow-md rounded-lg p-4">
-                    <table id="emailTable" class="min-w-full overflow-hidden divide-y divide-gray-200 rounded-t-lg">
+                    <table id="certificateTable" class="min-w-full overflow-hidden divide-y divide-gray-200 rounded-t-lg">
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                     <input type="checkbox" id="checkAll">
                                 </th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                    ID</th>
+                                    No</th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                    Nama</th>
+                                    Nama Penerima</th>
+                                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                        No Sertifikat</th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                    Email</th>
+                                    Acara</th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                    Telp</th>
+                                    Tanggal dikeluarkan</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                    Exp</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                    Status</th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                     Aksi</th>
                             </tr>
@@ -440,6 +427,135 @@
 @endsection
 @push('js')
     <script>
+        $(document).ready(function() {
+            $('#certificateTable').DataTable({
+                deferRender: true,
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                "initComplete": function(settings, json) {
+                    $('.dataTables_scrollBody thead tr').css({
+                        visibility: 'collapse'
+                    });
+                },
+                ajax: "{{ route('certificates.data') }}",
+                columns: [
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        className: 'text-left whitespace-nowrap px-6 py-4 border-b border-gray-200',
+                        render(data) {
+                            return `<input type="checkbox" name="id[]" class="user-checkbox" value="${data.id}">`;
+                        }
+                    },    
+                    {
+                        data: 'DT_RowIndex',
+                    },
+                    {
+                        data: 'recipient_name',
+                        name: 'recipient_name',
+                        className: 'whitespace-nowrap px-6 py-4 border-b border-gray-200'
+                    },
+                    {
+                        data: 'certificate_number',
+                        name: 'certificate_number',
+                        className: 'whitespace-nowrap px-6 py-4 border-b border-gray-200'
+                    },
+                    {
+                        data: 'event_name',
+                        name: 'event_name',
+                        className: 'whitespace-nowrap px-6 py-4 border-b border-gray-200'
+                    },
+                    {
+                        data: 'issued_date',
+                        name: 'issued_date',
+                        className: 'whitespace-nowrap px-6 py-4 border-b border-gray-200'
+                    },
+                    {
+                        data: 'expiry_date',
+                        name: 'expiry_date',
+                        className: 'whitespace-nowrap px-6 py-4 border-b border-gray-200'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status',
+                        className: 'whitespace-nowrap px-6 py-4 border-b border-gray-200'
+                    },
+                    {
+                        data: null,
+                        className: 'whitespace-nowrap px-6 py-4 border-b border-gray-200',
+                        render(data) {
+                            return `
+                                <button onclick="updateEmail(${data.id})" class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-700">Update</button>
+                                <button onclick="deleteEmail(${data.id})" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-700 ml-2">Delete</button>
+                            `;
+                        }
+                    }
+                ],
+                "language": {
+                    "paginate": {
+                        "previous": "&laquo;",
+                        "next": "&raquo;"
+                    }
+                },
+                "pagingType": "simple_numbers",
+                "drawCallback": function(settings) {
+                    var paginateLinks = $('.paginate_button a');
+                    var paginateButton = $('.paginate_button');
+                    paginateLinks.each(function() {
+                        $(this).addClass('bg-transparent p-2');
+                    });
+                    paginateButton.each(function() {
+                        $(this).addClass('p-2');
+                    });
+                    $('.paginate_button.active a').addClass('bg-blue-600 text-white');
 
+                    $('.dataTables_scrollBody thead tr').css({
+                        visibility: 'collapse'
+                    });
+                },
+
+                "rowCallback": function(row, data, index) {
+                    $(row).find('.check-for-delete').on('click', function() {
+                        if ($(this).is(':checked')) {
+                            $(row).addClass('bg-blue-100');
+                        } else {
+                            $(row).removeClass('bg-blue-100');
+                        }
+                    });
+
+                    $('.btn-delete-data').addClass('hidden');
+                }
+            });
+
+            $(document).on('click', '#saveTemplate', function() {
+                $.ajax({
+                    url: "",
+                    type: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        city: null
+                    },
+                    success: function(response) {
+                        let status = response.status;
+                        if (status == 'success') {
+                            alert('Email berhasil dikirim');
+                        } else {
+                            alert('Email gagal dikirim');
+                        }
+                    }
+                });
+            });
+
+            $('#insert').click(function() {
+                $('#update_name').val('valueToInsert');
+            });
+
+            $('#insert').click(function(){
+                $('#test').val('valueToInsert');
+                console.log("oke")
+            })
+        });
     </script>
 @endpush

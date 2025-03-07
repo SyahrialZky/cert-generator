@@ -6,6 +6,7 @@ use App\Models\Certificate;
 use Illuminate\Http\Request;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\DataTables;
 
 class CertificateController extends Controller
 {
@@ -14,7 +15,15 @@ class CertificateController extends Controller
      */
     public function index()
     {
-        return response()->json(Certificate::all());
+        return view('index');
+    }
+
+    public function getData()
+    {
+        $data = Certificate::all();
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->make(true);
     }
 
     /**

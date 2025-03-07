@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Peserta')
+@section('title', 'Event')
 @section('content')
     <div class="header mb-4">
 
@@ -22,14 +22,14 @@
 
         <div class="flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold">List Peserta</h1>
-                <p class="text-gray-400">Complete Collection of Peserta</p>
+                <h1 class="text-3xl font-bold">Master Acara</h1>
+                <p class="text-gray-400">Complete Collection of Acara</p>
             </div>
             <button class="bg-orange-500 hover:bg-orange-700 text-white px-4 py-2 rounded flex items-center"
                 aria-haspopup="dialog" aria-expanded="false" aria-controls="modal-create" data-hs-overlay="#modal-create"><i
                     class="fas fa-plus mr-2"></i> Create</button>
         </div>
-
+        
 
         <div id="importModal"
             class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
@@ -245,13 +245,7 @@
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                     ID</th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                    Nama</th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                    Email</th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                    Acara</th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                    Sebagai</th>
+                                    Nama Acara</th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                     Aksi</th>
                             </tr>
