@@ -236,7 +236,7 @@
         <div class="col-span-12 xl:col-span-6">
             <div class="card">
                 <div class="overflow-x-auto bg-white shadow-md rounded-lg p-4">
-                    <table id="emailTable" class="min-w-full overflow-hidden divide-y divide-gray-200 rounded-t-lg">
+                    <table id="pesertaTable" class="min-w-full overflow-hidden divide-y divide-gray-200 rounded-t-lg">
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
@@ -423,6 +423,125 @@
 @endsection
 @push('js')
     <script>
+        $(document).ready(function() {
+            $('#pesertaTable').DataTable({
+                deferRender: true,
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                "initComplete": function(settings, json) {
+                    $('.dataTables_scrollBody thead tr').css({
+                        visibility: 'collapse'
+                    });
+                },
+                ajax: "{{ route('peserta.data') }}",
+                columns: [
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        className: 'text-left whitespace-nowrap px-6 py-4 border-b border-gray-200',
+                        render(data) {
+                            return `<input type="checkbox" name="id[]" class="user-checkbox" value="${data.id}">`;
+                        }
+                    },    
+                    {
+                        data: 'DT_RowIndex',
+                    },
+                    {
+                        data: 'nama',
+                        name: 'nama',
+                        className: 'whitespace-nowrap px-6 py-4 border-b border-gray-200'
+                    },
+                    {
+                        data: 'email',
+                        name: 'email',
+                        className: 'whitespace-nowrap px-6 py-4 border-b border-gray-200'
+                    },
+                    {
+                        data: 'event_nama',
+                        name: 'event_nama',
+                        className: 'whitespace-nowrap px-6 py-4 border-b border-gray-200'
+                    },
+                    {
+                        data: 'sebagai',
+                        name: 'sebagai',
+                        className: 'whitespace-nowrap px-6 py-4 border-b border-gray-200'
+                    },
+                    {
+                        data: null,
+                        className: 'whitespace-nowrap px-6 py-4 border-b border-gray-200',
+                        render(data) {
+                            return `
+                                <button onclick="updatePeserta(${data.id})" class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-700">Update</button>
+                                <button onclick="deletePeserta(${data.id})" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-700 ml-2">Delete</button>
+                            `;
+                        }
+                    }
+                ],
+                "language": {
+                    "paginate": {
+                        "previous": "&laquo;",
+                        "next": "&raquo;"
+                    }
+                },
+                "pagingType": "simple_numbers",
+                "drawCallback": function(settings) {
+                    var paginateLinks = $('.paginate_button a');
+                    var paginateButton = $('.paginate_button');
+                    paginateLinks.each(function() {
+                        $(this).addClass('bg-transparent p-2');
+                    });
+                    paginateButton.each(function() {
+                        $(this).addClass('p-2');
+                    });
+                    $('.paginate_button.active a').addClass('bg-blue-600 text-white');
 
+                    $('.dataTables_scrollBody thead tr').css({
+                        visibility: 'collapse'
+                    });
+                },
+
+                "rowCallback": function(row, data, index) {
+                    $(row).find('.check-for-delete').on('click', function() {
+                        if ($(this).is(':checked')) {
+                            $(row).addClass('bg-blue-100');
+                        } else {
+                            $(row).removeClass('bg-blue-100');
+                        }
+                    });
+
+                    $('.btn-delete-data').addClass('hidden');
+                }
+            });
+
+            $(document).on('click', '#saveTemplate', function() {
+                $.ajax({
+                    url: "",
+                    type: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        city: null
+                    },
+                    success: function(response) {
+                        let status = response.status;
+                        if (status == 'success') {
+                            alert('Email berhasil dikirim');
+                        } else {
+                            alert('Email gagal dikirim');
+                        }
+                    }
+                });
+            });
+
+            $('#insert').click(function() {
+                $('#update_name').val('valueToInsert');
+            });
+
+            $('#insert').click(function(){
+                $('#test').val('valueToInsert');
+                console.log("oke")
+            })
+        });
     </script>
 @endpush

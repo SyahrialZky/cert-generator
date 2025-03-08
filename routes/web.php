@@ -29,5 +29,12 @@ Route::prefix('certificates')->group(function () {
     Route::delete('/delete/{id}', [CertificateController::class, 'destroy'])->name('certificates.destroy');
 });
 
-Route::get('/peserta', [PesertaController::class, 'index'])->name('peserta.index');
-Route::get('/event', [EventController::class, 'index'])->name('event.index');
+Route::prefix('peserta')->group(function () {
+    Route::get('/', [PesertaController::class, 'index'])->name('peserta.index');
+    Route::get('/data', [PesertaController::class, 'getData'])->name('peserta.data');
+});
+
+Route::prefix('event')->group(function () {
+    Route::get('/', [EventController::class, 'index'])->name('event.index');
+    Route::get('/data', [EventController::class, 'getData'])->name('event.data');
+});
