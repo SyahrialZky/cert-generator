@@ -185,4 +185,26 @@ class CertificateController extends Controller
         $random = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
         return $prefix . '-' . $timestamp . '-' . $random;
     }
+
+    public function checkCertificateNumber(Request $request)
+    {
+        $certificateNumber = $request->input('certificate_number');
+
+        $participant = DB::table('participants')
+            ->where('cert_number', $certificateNumber)
+            ->first();
+
+        if ($participant) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Certificate number is valid',
+                'participant' => $participant
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid certificate number'
+            ], 400);
+        }
+    }
 }
