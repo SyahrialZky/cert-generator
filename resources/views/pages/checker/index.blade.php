@@ -31,8 +31,7 @@
             </p>
             <div
                 class="mt-10 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                <input
-                id="searchValue"
+                <input id="searchValue"
                     class="rounded-full py-3 px-6 text-gray-700 w-3/4 sm:w-1/2 max-w-md shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="tulis nomor sertifikat" type="text" />
                 <button id="searchSertif"
@@ -83,6 +82,7 @@
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#searchSertif').click(function() {
@@ -91,14 +91,18 @@
                     url: '/api/check-certificate-number',
                     type: 'POST',
                     data: JSON.stringify({
-                        certificate_number : searchValue,
+                        certificate_number: searchValue,
                     }),
                     contentType: 'application/json',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        alert("Certificate valid");
+                        swal({
+                            title: "Valid Certificate!",
+                            text: "Certificate is valid!",
+                            icon: "success",
+                        });
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
