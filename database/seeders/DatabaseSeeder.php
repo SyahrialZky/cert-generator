@@ -19,5 +19,12 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'password' => 'password',
         ]);
+
+        $this->call([
+            EventSeeder::class,
+            TemplateSeeder::class,
+            ParticipantSeeder::class,
+            CertificateSeeder::class,
+        ]);
     }
 }

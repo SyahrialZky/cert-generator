@@ -10,7 +10,7 @@ class EventController extends Controller
 {
     public function index()
     {
-        return view('pages.event.index');
+        return view('pages.event.index', ['events' => Event::all()]);
     }
     public function getData()
     {
@@ -21,13 +21,9 @@ class EventController extends Controller
     }
     public function store(Request $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-        ]);
-
-        $event = Event::create($request->all());
-
-        return response()->json($event, 201);
+        $request->validate(['nama' => 'required|string|max:255']);
+        Event::create($request->all());
+        return redirect()->route('event.index')->with('success', 'Event created successfully');
     }
 
     public function show($id)
@@ -55,7 +51,7 @@ class EventController extends Controller
 
         $event->update($request->all());
 
-        return response()->json($event, 200);
+        return redirect()->route('event.index')->with('success', 'Event updated successfully');
     }
 
     public function destroy($id)
@@ -68,6 +64,6 @@ class EventController extends Controller
 
         $event->delete();
 
-        return response()->json(['message' => 'Event deleted'], 200);
+        return redirect()->route('event.index')->with('success', 'Event deleted successfully');
     }
 }
