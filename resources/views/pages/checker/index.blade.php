@@ -82,7 +82,7 @@
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
             $('#searchSertif').click(function() {
@@ -98,11 +98,11 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        swal({
-                            title: "Valid Certificate!",
-                            text: "Certificate is valid!",
-                            icon: "success",
-                        });
+                        Swal.fire({
+  title: "Certificate Valid",
+  icon: "success",
+  draggable: true
+});
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
