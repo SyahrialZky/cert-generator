@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Certificate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Str;
 
 class CertificateController extends Controller
 {
@@ -72,29 +74,45 @@ class CertificateController extends Controller
         return response()->json(['message' => 'Certificate deleted']);
     }
 
+
     public function generateCertificate(Request $request)
     {
         try {
-            $names = $request->input('names');
-            $appreciation = $request->input('appreciation', 'Peserta');
-            $eventDate = $request->input('eventDate', now()->format('d F Y'));
+            $event = DB::table('events')->where('id', $request->input('event'))->first();
+            $template = DB::table('templates')
+                ->where('id', $request->input('template'))
+                ->select('file_path')
+                ->first();
+            $peserta = DB::table('participants')
+                ->where('event_id', $event->id)
+                ->select('id', 'nama', 'sebagai')
+                ->get();
+            $eventDate = $request->input('tanggal', now()->format('d F Y'));
 
-            if (!is_array($names) || empty($names)) {
+            if (!$event || !$template || $peserta->isEmpty()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Names array is required.'
+                    'message' => 'Event, template, or participants data is missing.'
                 ], 400);
             }
 
             $manager = ImageManager::gd();
             $certificates = [];
+            $templatePath = public_path($template->file_path);
+            $fontPath = public_path('font/ArialMdm.ttf');
 
-            foreach ($names as $name) {
+            $zipFileName = 'certificates_' . $event->id . '_' . date('Ymd_His') . '.zip';
+            Storage::makeDirectory('public/certificates');
+            $zipFilePath = storage_path('app/public/certificates/' . $zipFileName);
+
+            $zip = new \ZipArchive();
+            if ($zip->open($zipFilePath, \ZipArchive::CREATE) !== TRUE) {
+                throw new \Exception("Cannot create zip file");
+            }
+
+            foreach ($peserta as $p) {
                 $certificateNumber = $this->generateCertificateNumber();
-                $templatePath = public_path('images/template.png');
                 $image = $manager->read($templatePath);
-
-                $fontPath = public_path('font/arial.ttf');
 
                 $image = $image->text($certificateNumber, 213, 189, function ($font) use ($fontPath) {
                     $font->file($fontPath);
@@ -102,13 +120,13 @@ class CertificateController extends Controller
                     $font->color('#000000');
                 });
 
-                $image = $image->text($name, 310, 240, function ($font) use ($fontPath) {
+                $image = $image->text($p->nama, 310, 240, function ($font) use ($fontPath) {
                     $font->file($fontPath);
                     $font->size(22);
                     $font->color('#000000');
                 });
 
-                $image = $image->text($appreciation, 400, 323, function ($font) use ($fontPath) {
+                $image = $image->text($p->sebagai, 400, 323, function ($font) use ($fontPath) {
                     $font->file($fontPath);
                     $font->size(22);
                     $font->color('#000000');
@@ -120,22 +138,36 @@ class CertificateController extends Controller
                     $font->color('#000000');
                 });
 
-                $filename = 'certificate-' . $certificateNumber . '.png';
+                $safeNama = preg_replace('/[^A-Za-z0-9\-]/', '-', $p->nama);
+                $filename = 'certificate-' . $safeNama . '-' . $certificateNumber . '.png';
                 $filePath = 'public/certificates/' . $filename;
 
-                Storage::makeDirectory('public/certificates');
-                $image->toPng()->save(storage_path('app/' . $filePath));
+                $certImage = $image->toPng();
+                Storage::put($filePath, $certImage);
+
+                $zip->addFromString($filename, $certImage);
+
+                DB::table('participants')
+                    ->where('id', $p->id)
+                    ->update([
+                        'certificate' => $filePath,
+                        'cert_number' => $certificateNumber
+                    ]);
 
                 $certificates[] = [
-                    'name' => $name,
+                    'name' => $p->nama,
                     'certificateNumber' => $certificateNumber,
                     'certificateUrl' => asset('storage/certificates/' . $filename),
                 ];
             }
 
+            $zip->close();
+
             return response()->json([
                 'success' => true,
-                'certificates' => $certificates
+                'message' => 'Certificates generated successfully',
+                'certificates' => $certificates,
+                'zipUrl' => asset('storage/certificates/' . $zipFileName)
             ]);
         } catch (\Exception $e) {
             return response()->json([

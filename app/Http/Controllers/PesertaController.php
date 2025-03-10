@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Models\Participant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class PesertaController extends Controller
 {
     public function index()
     {
-        return view('pages.peserta.index');
+        $events = DB::table('events')->select('id', 'nama as name')->get();
+        $template = DB::table('templates')->select('id', 'name')->get();
+        return view('pages.peserta.index', compact('events', 'template'));
     }
     public function getData()
     {
