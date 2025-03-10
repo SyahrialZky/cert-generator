@@ -37,4 +37,7 @@ Route::prefix('peserta')->group(function () {
 Route::prefix('event')->group(function () {
     Route::get('/', [EventController::class, 'index'])->name('event.index');
     Route::get('/data', [EventController::class, 'getData'])->name('event.data');
+    Route::post('/store', [EventController::class, 'store'])->name('event.store');
+    Route::post('/{id}', [EventController::class, 'update'])->name('event.update'); 
+    Route::delete('/{id}', [EventController::class, 'destroy'])->name('event.destroy');
 });
