@@ -132,6 +132,7 @@
                     { data: null, render: function(data) {
                         return `
                             <button onclick="showUpdateModal(${data.id}, '${data.nama}')" class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-700">Update</button>
+                            <button onclick="detailEvent(${data.id})" class="bg-yellow-500 text-white px-3 py-1 rounded-lg hover:bg-yellow-700 ml-2">Detail</button>
                             <button onclick="deleteEvent(${data.id})" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-700 ml-2">Delete</button>
                         `;
                     }}
