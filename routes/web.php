@@ -17,14 +17,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Route::get('/', function () {
+//     return view('index');
+// });
+
+Route::get('/', function () {
+    return view('pages.checker.index');
+})->name('home');
+// })->middleware(['auth'])->name('home');
+
 Route::controller(AuthController::class)->group(function () {
     Route::get('/login', 'login')->name('login');
     Route::post('/login', 'CheckUser')->name('login-user');
     Route::post('/logout', 'logout')->name('logout');
 });
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/', [CertificateController::class, 'index'])->name('home');
+Route::prefix('')->group(function () {
+    // Route::get('/', [CertificateController::class, 'index'])->name('home');
     Route::get('/data', [CertificateController::class, 'getData'])->name('certificates.data');
     Route::post('/store', [CertificateController::class, 'store'])->name('certificates.store');
     Route::get('/show/{id}', [CertificateController::class, 'show'])->name('certificates.show');
