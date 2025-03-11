@@ -19,6 +19,10 @@ class CertificateController extends Controller
     {
         return view('index');
     }
+    public function certificateChecker()
+    {
+        return view('pages.checker.index');
+    }
 
     public function getData()
     {
