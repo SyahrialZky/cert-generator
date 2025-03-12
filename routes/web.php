@@ -22,6 +22,11 @@ Route::get('/', function () {
     return view('index');
 })->middleware(['auth'])->name('home');
 
+Route::get('/certificate-checker', function () {
+    return view('pages.checker.index');
+});
+
+
 Route::controller(AuthController::class)->group(function () {
     Route::get('/login', 'login')->name('login');
     Route::post('/login', 'CheckUser')->name('login-user');
@@ -36,7 +41,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/show/{id}', [CertificateController::class, 'show'])->name('certificates.show');
         Route::put('/update/{id}', [CertificateController::class, 'update'])->name('certificates.update');
         Route::delete('/delete/{id}', [CertificateController::class, 'destroy'])->name('certificates.destroy');
-        Route::get('/certificate-checker', [CertificateController::class, 'certificateChecker'])->name('certificate.checker');
     });
     Route::prefix('peserta')->group(function () {
         Route::get('/', [PesertaController::class, 'index'])->name('peserta.index');
@@ -54,7 +58,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [TemplateController::class, 'index'])->name('template.index');
         Route::get('/data', [TemplateController::class, 'getData'])->name('template.data');
         Route::post('/store', [TemplateController::class, 'store'])->name('template.store');
-        Route::put('/{id}', [TemplateController::class, 'update'])->name('template.update'); // <--- Pastikan ini ada sebelum GET /{id}
+        Route::put('/{id}', [TemplateController::class, 'update'])->name('template.update');
         Route::get('/{id}', [TemplateController::class, 'show'])->name('template.show');
         Route::delete('/{id}', [TemplateController::class, 'destroy'])->name('template.destroy');
     });
