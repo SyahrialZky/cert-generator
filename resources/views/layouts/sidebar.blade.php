@@ -29,15 +29,6 @@
                       Sertifikat
                   </a>
               </li>
-                <li>
-                  <a href="{{ route('certificate.checker') }}"
-                      class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg 
-                      
-                      focus:outline-none">
-                      <i class="fas fa-book mr-2"></i>
-                      Cek Validitas Sertifikat
-                  </a>
-              </li>
               <li>
                   <a href="{{ route('template.index') }}"
                       class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg 

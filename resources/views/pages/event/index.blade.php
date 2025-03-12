@@ -2,6 +2,7 @@
 @section('title', 'Event')
 @section('content')
     <div class="header mb-4">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <div class="flex justify-between items-center">
             <div>
                 <h1 class="text-3xl font-bold">Master Acara</h1>
@@ -34,16 +35,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($events as $event)
-                                <tr>
-                                    <td class="px-6 py-4 border-b border-gray-200">{{ $event->id }}</td>
-                                    <td class="px-6 py-4 border-b border-gray-200">{{ $event->nama }}</td>
-                                    <td class="px-6 py-4 border-b border-gray-200">
-                                        <button onclick="showUpdateModal({{ $event->id }}, '{{ $event->nama }}')" class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-700">Update</button>
-                                        <button onclick="deleteEvent({{ $event->id }})" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-700 ml-2">Delete</button>
-                                    </td>
-                                </tr>
-                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -65,7 +56,7 @@
                         </svg>
                     </button>
                 </div>
-                <form id="create-form" action="{{ route('event.store') }}" method="POST">
+                <form id="create-form"  method="POST">
                     @csrf
                     <div class="p-4 overflow-y-auto">
                         <div class="space-y-3">
@@ -85,6 +76,10 @@
     </div>
 
     {{-- Modal Update --}}
+    <button class="bg-orange-500 hidden hover:bg-orange-700 text-white px-4 py-2 rounded flex items-center"
+        id="updateModal" aria-haspopup="dialog" aria-expanded="false" aria-controls="modal-update"
+        data-hs-overlay="#modal-update"><i class="fas fa-plus mr-2"></i> update</button>
+
     <div id="modal-update" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none" role="dialog" tabindex="-1" aria-labelledby="modal-update-label">
         <div class="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
             <div class="w-full flex flex-col bg-white border shadow-sm rounded-xl pointer-events-auto">
@@ -98,9 +93,9 @@
                         </svg>
                     </button>
                 </div>
-                <form id="update-form" action="" method="POST">
+                <form id="update-form" method="POST">
                     @csrf
-                    @method('PUT')
+                    <input type="hidden" id="update_id" name="id">
                     <div class="p-4 overflow-y-auto">
                         <div class="space-y-3">
                             <div>
@@ -110,7 +105,7 @@
                         </div>
                     </div>
                     <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t">
-                        <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none" data-hs-overlay="#modal-update">Close</button>
+                        <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none" data-hs-overlay="#updateModal">Close</button>
                         <button type="submit" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">Update</button>
                     </div>
                 </form>
@@ -125,13 +120,13 @@
             $('#eventTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('event.data') }}",
+                ajax: "{{ url('/api/event/data') }}",
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex' },
                     { data: 'nama', name: 'nama' },
                     { data: null, render: function(data) {
                         return `
-                            <button onclick="showUpdateModal(${data.id}, '${data.nama}')" class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-700">Update</button>
+                            <button onclick="updateEvent(${data.id})" class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-700">Update</button>
                             <button onclick="detailEvent(${data.id})" class="bg-yellow-500 text-white px-3 py-1 rounded-lg hover:bg-yellow-700 ml-2">Detail</button>
                             <button onclick="deleteEvent(${data.id})" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-700 ml-2">Delete</button>
                         `;
@@ -144,16 +139,99 @@
             }, 2000);
         });
 
-        function showUpdateModal(id, nama) {
-            $('#update-form').attr('action', `/event/${id}`);
-            $('#update-nama').val(nama);
-            $('#modal-update').removeClass('hidden').addClass('flex');
+        $(document).ready(function() {
+        $("#create-form").submit(function(e) {
+                e.preventDefault(); 
+
+                let formData = new FormData(this); 
+
+                $.ajax({
+                    url: "/api/event/store", 
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") 
+                    },
+                    success: function(response) {
+                        alert("Template berhasil dibuat!");
+                        location.reload(); 
+                    },
+                    error: function(xhr) {
+                        let errors = xhr.responseJSON?.errors;
+                        if (errors) {
+                            alert("Gagal menyimpan template: " + JSON.stringify(errors));
+                        } else {
+                            alert("Terjadi kesalahan, coba lagi.");
+                        }
+                    }
+                });
+            });
+        });
+
+        function updateEvent(eventId) {
+            console.log("Fetching data for event ID:", eventId);
+
+            $.ajax({
+                url: `/api/event/${eventId}`,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    console.log("Data event diterima:", data);
+
+                    $("#update_id").val(data.id);
+                    $("#update-nama").val(data.nama);
+                    
+                    
+                    $("#updateModal").trigger("click");
+                },
+                error: function(xhr) {
+                    console.error("Error fetching event:", xhr.responseText);
+                    alert("Gagal mengambil data event!");
+                }
+            });
         }
+
+        $(document).ready(function() {
+        $("#update-form").submit(function(e) {
+            e.preventDefault(); 
+
+            let eventId = $("#update_id").val(); 
+            let formData = new FormData(this);
+
+            $.ajax({
+                url: `/api/event/${eventId}`, 
+                type: "POST", 
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                    "X-HTTP-Method-Override": "PUT"
+                },
+                success: function(response) {
+                    alert("Event berhasil diperbarui!");
+                    location.reload();
+                },
+                error: function(xhr) {
+                    let errors = xhr.responseJSON?.errors;
+                    if (errors) {
+                        alert("Gagal mengupdate event: " + JSON.stringify(errors));
+                    } else {
+                        alert("Terjadi kesalahan, coba lagi.");
+                    }
+                }
+            });
+        });
+    });
+
+
 
         function deleteEvent(id) {
             if (confirm('Are you sure you want to delete this event?')) {
                 $.ajax({
-                    url: `/event/${id}`,
+                    url: `api/event/${id}`,
                     type: 'DELETE',
                     data: {
                         _token: '{{ csrf_token() }}'
