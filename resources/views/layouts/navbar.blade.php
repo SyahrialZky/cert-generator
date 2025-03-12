@@ -82,11 +82,14 @@
               <p class="text-sm font-medium text-gray-800 dark:text-neutral-200">{{ auth()->user()->name }}</p>
             </div>
             <div class="p-1.5 space-y-0.5">
-              <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300" href="#">
-                <i class="fas fa-sign-out-alt"></i>
-                Logout
-              </a>
-            </div>
+              <form method="POST" action="{{ route('logout') }}">
+                  @csrf
+                  <button type="submit" class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300">
+                      <i class="fas fa-sign-out-alt"></i>
+                      Logout
+                  </button>
+              </form>
+          </div>
           </div>
         </div>
         <!-- End Dropdown -->
