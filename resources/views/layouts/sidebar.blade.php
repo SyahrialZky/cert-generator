@@ -21,7 +21,7 @@
         <nav class="hs-accordion-group p-3 w-full flex flex-col flex-wrap" data-hs-accordion-always-open>
           <ul class="flex flex-col space-y-1">
                 <li>
-                  <a href="{{ route('certificates.index') }}"
+                  <a href="{{ route('home') }}"
                       class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg 
                       
                       focus:outline-none">
@@ -30,7 +30,7 @@
                   </a>
               </li>
               <li>
-                  <a href=""
+                  <a href="{{ route('template.index') }}"
                       class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg 
                       
                       focus:outline-none">

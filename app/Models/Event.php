@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Peserta extends Model
+class Event extends Model
 {
-    protected $fillable = [];
+    protected $fillable = ['nama'];
     use HasFactory;
 }

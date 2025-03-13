@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\TemplateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,18 +18,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('index');
-// });
+Route::get('/', function () {
+    return view('index');
+})->middleware(['auth'])->name('home');
 
-Route::prefix('certificates')->group(function () {
-    Route::get('/', [CertificateController::class, 'index'])->name('certificates.index');
-    Route::get('/data', [CertificateController::class, 'getData'])->name('certificates.data');
-    Route::post('/store', [CertificateController::class, 'store'])->name('certificates.store');
-    Route::get('/show/{id}', [CertificateController::class, 'show'])->name('certificates.show');
-    Route::put('/update/{id}', [CertificateController::class, 'update'])->name('certificates.update');
-    Route::delete('/delete/{id}', [CertificateController::class, 'destroy'])->name('certificates.destroy');
+Route::get('/certificate-checker', function () {
+    return view('pages.checker.index');
 });
 
-Route::get('/peserta', [PesertaController::class, 'index'])->name('peserta.index');
-Route::get('/event', [EventController::class, 'index'])->name('event.index');
+
+Route::controller(AuthController::class)->group(function () {
+    Route::get('/login', 'login')->name('login');
+    Route::post('/login', 'CheckUser')->name('login-user');
+    Route::post('/logout', 'logout')->name('logout');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/certificate', [CertificateController::class, 'index'])->name('certificate.index');
+    Route::get('/template', [TemplateController::class, 'index'])->name('template.index');
+    Route::get('/peserta', [PesertaController::class, 'index'])->name('peserta.index');
+    Route::get('/event', [EventController::class, 'index'])->name('event.index');
+});
