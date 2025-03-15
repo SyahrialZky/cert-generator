@@ -19,10 +19,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Route::middleware('auth:sanctum')->group(function () {
-//     Route::get('/user', function (Request $request) {
-//         return $request->user();
-//     });
 // });
+
+Route::get('/user', function (Request $request) {
+    return $request->user();
+});
+
 Route::prefix('certificate')->group(function () {
     Route::get('/data', [CertificateController::class, 'getData']);
     Route::post('/store', [CertificateController::class, 'store']);
@@ -43,7 +45,6 @@ Route::prefix('peserta')->group(function () {
 
 Route::prefix('event')->group(function () {
     Route::get('/data', [EventController::class, 'getData']);
-    Route::get('/{id}/peserta', [EventController::class, 'dataPeserta'])->name('event.data-peserta');
     Route::post('/store', [EventController::class, 'store']);
     Route::put('/{id}', [EventController::class, 'update']);
     Route::get('/{id}', [EventController::class, 'show']);
