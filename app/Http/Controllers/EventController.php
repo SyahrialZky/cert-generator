@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Participant;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -19,6 +21,28 @@ class EventController extends Controller
             ->addIndexColumn()
             ->make(true);
     }
+
+    public function dataPeserta($id): JsonResponse
+    {
+        $event = Event::find($id);
+
+        if (!$event) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Event tidak ditemukan'
+            ], 404);
+        }
+
+        $participants = Participant::where('event_id', $id)->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar peserta berhasil diambil',
+            'event' => $event,
+            'participants' => $participants
+        ], 200);
+    }
+
     public function store(Request $request)
     {
         $request->validate(['nama' => 'required|string|max:255']);
@@ -64,6 +88,6 @@ class EventController extends Controller
 
         $event->delete();
 
-        return redirect()->route('event.index')->with('success', 'Event deleted successfully');
+        return response()->json(['message' => 'Event deleted'], 200);
     }
 }

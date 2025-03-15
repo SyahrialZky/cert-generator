@@ -18,42 +18,42 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+// Route::middleware('auth:sanctum')->group(function () {
+//     Route::get('/user', function (Request $request) {
+//         return $request->user();
+//     });
+// });
+Route::prefix('certificate')->group(function () {
+    Route::get('/data', [CertificateController::class, 'getData']);
+    Route::post('/store', [CertificateController::class, 'store']);
+    Route::get('/show/{id}', [CertificateController::class, 'show']);
+    Route::put('/update/{id}', [CertificateController::class, 'update']);
+    Route::delete('/delete/{id}', [CertificateController::class, 'destroy']);
+    Route::post('/generate-certificate', [CertificateController::class, 'generateCertificate']);
+    Route::post('/check-certificate-number', [CertificateController::class, 'checkCertificateNumber']);
+});
 
-    Route::prefix('certificate')->group(function () {
-        Route::get('/data', [CertificateController::class, 'getData']);
-        Route::post('/store', [CertificateController::class, 'store']);
-        Route::get('/show/{id}', [CertificateController::class, 'show']);
-        Route::put('/update/{id}', [CertificateController::class, 'update']);
-        Route::delete('/delete/{id}', [CertificateController::class, 'destroy']);
-        Route::post('/generate-certificate', [CertificateController::class, 'generateCertificate']);
-        Route::post('/check-certificate-number', [CertificateController::class, 'checkCertificateNumber']);
-    });
+Route::prefix('peserta')->group(function () {
+    Route::get('/data', [PesertaController::class, 'getData']);
+    Route::post('/store', [PesertaController::class, 'store']);
+    Route::put('/{id}', [PesertaController::class, 'update']);
+    Route::get('/{id}', [PesertaController::class, 'show']);
+    Route::delete('/{id}', [PesertaController::class, 'destroy']);
+});
 
-    Route::prefix('peserta')->group(function () {
-        Route::get('/data', [PesertaController::class, 'getData']);
-        Route::post('/store', [PesertaController::class, 'store']);
-        Route::put('/{id}', [PesertaController::class, 'update']);
-        Route::get('/{id}', [PesertaController::class, 'show']);
-        Route::delete('/{id}', [PesertaController::class, 'destroy']);
-    });
+Route::prefix('event')->group(function () {
+    Route::get('/data', [EventController::class, 'getData']);
+    Route::get('/{id}/peserta', [EventController::class, 'dataPeserta'])->name('event.data-peserta');
+    Route::post('/store', [EventController::class, 'store']);
+    Route::put('/{id}', [EventController::class, 'update']);
+    Route::get('/{id}', [EventController::class, 'show']);
+    Route::delete('/{id}', [EventController::class, 'destroy']);
+});
 
-    Route::prefix('event')->group(function () {
-        Route::get('/data', [EventController::class, 'getData']);
-        Route::post('/store', [EventController::class, 'store']);
-        Route::put('/{id}', [EventController::class, 'update']);
-        Route::get('/{id}', [EventController::class, 'show']);
-        Route::delete('/{id}', [EventController::class, 'destroy']);
-    });
-
-    Route::prefix('template')->group(function () {
-        Route::get('/data', [TemplateController::class, 'getData']);
-        Route::post('/store', [TemplateController::class, 'store']);
-        Route::put('/{id}', [TemplateController::class, 'update']);
-        Route::get('/{id}', [TemplateController::class, 'show']);
-        Route::delete('/{id}', [TemplateController::class, 'destroy']);
-    });
+Route::prefix('template')->group(function () {
+    Route::get('/data', [TemplateController::class, 'getData']);
+    Route::post('/store', [TemplateController::class, 'store']);
+    Route::put('/{id}', [TemplateController::class, 'update']);
+    Route::get('/{id}', [TemplateController::class, 'show']);
+    Route::delete('/{id}', [TemplateController::class, 'destroy']);
 });

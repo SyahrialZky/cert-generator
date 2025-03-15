@@ -155,13 +155,13 @@
                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") 
                     },
                     success: function(response) {
-                        alert("Template berhasil dibuat!");
+                        alert("Event berhasil dibuat!");
                         location.reload(); 
                     },
                     error: function(xhr) {
                         let errors = xhr.responseJSON?.errors;
                         if (errors) {
-                            alert("Gagal menyimpan template: " + JSON.stringify(errors));
+                            alert("Gagal menyimpan event: " + JSON.stringify(errors));
                         } else {
                             alert("Terjadi kesalahan, coba lagi.");
                         }
@@ -227,9 +227,8 @@
     });
 
 
-
         function deleteEvent(id) {
-            if (confirm('Are you sure you want to delete this event?')) {
+            if (confirm('Apakah Anda yakin ingin menghapus event ini?')) {
                 $.ajax({
                     url: `api/event/${id}`,
                     type: 'DELETE',
@@ -237,6 +236,7 @@
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
+                        alert("Event berhasil dihapus!");
                         location.reload();
                     },
                 });

@@ -38,4 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/template', [TemplateController::class, 'index'])->name('template.index');
     Route::get('/peserta', [PesertaController::class, 'index'])->name('peserta.index');
     Route::get('/event', [EventController::class, 'index'])->name('event.index');
+    Route::get('/event/{id}/peserta', function () {
+        return view('pages.event.detail');
+    })->name('event.peserta');
 });
