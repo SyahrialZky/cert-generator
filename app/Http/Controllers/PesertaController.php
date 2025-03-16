@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\ParticipantImport;
 use App\Models\Event;
 use App\Models\Participant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\DataTables;
 
 class PesertaController extends Controller
@@ -16,6 +18,21 @@ class PesertaController extends Controller
         $template = DB::table('templates')->select('id', 'name')->get();
         return view('pages.peserta.index', compact('events', 'template'));
     }
+
+    public function importFile(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv,xls'
+        ]);
+
+        Excel::import(new ParticipantImport, $request->file('file'));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data peserta berhasil diimport'
+        ]);
+    }
+
     public function getData()
     {
         $data = Participant::with('event')->get();

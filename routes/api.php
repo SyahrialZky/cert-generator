@@ -41,6 +41,7 @@ Route::prefix('peserta')->group(function () {
     Route::put('/{id}', [PesertaController::class, 'update']);
     Route::get('/{id}', [PesertaController::class, 'show']);
     Route::delete('/{id}', [PesertaController::class, 'destroy']);
+    Route::post('/import', [PesertaController::class, 'importFile']);
 });
 
 Route::prefix('event')->group(function () {
