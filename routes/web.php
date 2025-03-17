@@ -18,11 +18,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-})->middleware(['auth'])->name('home');
+// Route::get('/', function () {
+//     return view('index');
+// })->middleware(['auth'])->name('home');
 
-Route::get('/certificate-checker', function () {
+Route::get('/', function () {
     return view('pages.checker.index');
 });
 
