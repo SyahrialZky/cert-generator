@@ -25,7 +25,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('certificate')->group(function () {
+Route::prefix('')->group(function () {
     Route::get('/data', [CertificateController::class, 'getData']);
     Route::post('/store', [CertificateController::class, 'store']);
     Route::get('/show/{id}', [CertificateController::class, 'show']);
