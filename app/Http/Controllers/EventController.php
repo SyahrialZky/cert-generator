@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\Participant;
+use App\Models\Template;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -22,26 +23,13 @@ class EventController extends Controller
             ->make(true);
     }
 
-    public function dataPeserta($id): JsonResponse
+    public function viewPeserta()
     {
-        $event = Event::find($id);
-
-        if (!$event) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Event tidak ditemukan'
-            ], 404);
-        }
-
-        $participants = Participant::where('event_id', $id)->get();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Daftar peserta berhasil diambil',
-            'event' => $event,
-            'participants' => $participants
-        ], 200);
+        $events = Event::select('id', 'nama as name')->get();
+        $template = Template::select('id', 'name')->get();
+        return view('pages.event.detail', compact('events', 'template'));
     }
+
 
     public function store(Request $request)
     {

@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\DataTables;
+use Illuminate\Http\JsonResponse;
+
 
 class PesertaController extends Controller
 {
@@ -19,19 +21,44 @@ class PesertaController extends Controller
         return view('pages.peserta.index', compact('events', 'template'));
     }
 
+    public function dataPeserta($id): JsonResponse
+    {
+        $event = Event::find($id);
+
+        if (!$event) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Event tidak ditemukan'
+            ], 404);
+        }
+
+        $participants = Participant::where('event_id', $id)->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar peserta berhasil diambil',
+            'event' => $event,
+            'participants' => $participants
+        ], 200);
+    }
+
     public function importFile(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:xlsx,csv,xls'
+            'file' => 'required|mimes:xlsx,csv,xls',
+            'event_id' => 'required|exists:events,id'
         ]);
 
-        Excel::import(new ParticipantImport, $request->file('file'));
+        $event_id = $request->event_id;
+
+        Excel::import(new ParticipantImport($event_id), $request->file('file'));
 
         return response()->json([
             'success' => true,
             'message' => 'Data peserta berhasil diimport'
         ]);
     }
+
 
     public function getData()
     {

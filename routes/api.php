@@ -50,6 +50,7 @@ Route::prefix('event')->group(function () {
     Route::put('/{id}', [EventController::class, 'update']);
     Route::get('/{id}', [EventController::class, 'show']);
     Route::delete('/{id}', [EventController::class, 'destroy']);
+    Route::get('/{id}/peserta', [PesertaController::class, 'dataPeserta']);
 });
 
 Route::prefix('template')->group(function () {

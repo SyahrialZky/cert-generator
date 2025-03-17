@@ -242,5 +242,9 @@
                 });
             }
         }
+
+        function detailEvent(eventId) {
+    window.location.href = `/event/${eventId}/peserta`;
+}
     </script>
 @endpush
