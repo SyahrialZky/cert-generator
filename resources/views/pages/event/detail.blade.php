@@ -299,7 +299,7 @@ role="dialog" tabindex="-1" aria-labelledby="modal-create-label">
                 let tanggal = $('#tanggal').val();
 
                 $.ajax({
-                    url: '/api/generate-certificate',
+                    url: '/api/certificate/generate-certificate',
                     type: 'POST',
                     data: JSON.stringify({
                         event: event,
