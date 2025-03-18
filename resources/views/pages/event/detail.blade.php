@@ -326,47 +326,47 @@
             let template = $('#template').val();
             let tanggal = $('#tanggal').val();
 
-            $.ajax({
-                url: '/api/generate-certificate',
-                type: 'POST',
-                data: JSON.stringify({
-                    event: event,
-                    template: template,
-                    tanggal: tanggal
-                }),
-                contentType: 'application/json',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    if (response.success && response.zipUrl) {
-                        $('#downloadContainer').html(
-                            '<a href="' + response.zipUrl +
-                            '" class="btn btn-primary" download>' +
-                            '<i class="fa fa-download"></i> Download All Certificates (ZIP)' +
-                            '</a>'
-                        );
-                        window.location.href = response.zipUrl;
-                        alert("success generate sertificate")
-                        window.location.reload();
-                    } else {
-                        alert("error generate sertificate")
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
-                    let errorMsg = 'Error generating certificates';
-                    try {
-                        const errorObj = JSON.parse(xhr.responseText);
-                        if (errorObj.message) {
-                            errorMsg = errorObj.message;
+                $.ajax({
+                    url: '/api/certificate/generate-certificate',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        event: event,
+                        template: template,
+                        tanggal: tanggal
+                    }),
+                    contentType: 'application/json',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        console.log(response);
+
+                        if (response.success && response.zipUrl) {
+                            $('#downloadContainer').html(
+                                '<a href="' + response.zipUrl +
+                                '" class="btn btn-primary" download>' +
+                                '<i class="fa fa-download"></i> Download All Certificates (ZIP)' +
+                                '</a>'
+                            );
+                            window.location.href = response.zipUrl;
+                        } else {
+                            alert("error generate sertificate")
                         }
-                    } catch (e) {}
-                    $('#generateStatus').html('<div class="alert alert-danger">' +
-                        errorMsg + '</div>');
-                }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        let errorMsg = 'Error generating certificates';
+                        try {
+                            const errorObj = JSON.parse(xhr.responseText);
+                            if (errorObj.message) {
+                                errorMsg = errorObj.message;
+                            }
+                        } catch (e) {}
+                        $('#generateStatus').html('<div class="alert alert-danger">' +
+                            errorMsg + '</div>');
+                    }
+                });
             });
-        });
 
         $(document).ready(function() {
             $("#import-btn").on("click", function(e) {
