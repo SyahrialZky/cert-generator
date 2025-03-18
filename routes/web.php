@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('pages.checker.index');
-});
+})->name('home');
 
 
 Route::controller(AuthController::class)->group(function () {
