@@ -23,11 +23,11 @@ class EventController extends Controller
             ->make(true);
     }
 
-    public function viewPeserta()
+    public function viewPeserta($id)
     {
         $events = Event::select('id', 'nama as name')->get();
         $template = Template::select('id', 'name')->get();
-        return view('pages.event.detail', compact('events', 'template'));
+        return view('pages.event.detail', compact('events', 'template', 'id'));
     }
 
 
