@@ -327,7 +327,7 @@
             let tanggal = $('#tanggal').val();
 
                 $.ajax({
-                    url: '/api/certificate/generate-certificate',
+                    url: '/api/generate-certificate',
                     type: 'POST',
                     data: JSON.stringify({
                         event: event,
