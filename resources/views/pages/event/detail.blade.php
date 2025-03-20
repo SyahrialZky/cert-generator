@@ -121,7 +121,7 @@
                 {{-- <form action=" {{ route('peserta.sertificate') }} " method="POST">
                     @csrf --}}
                 <div class="p-4 overflow-y-auto">
-                    <div class="max-w-sm space-y-3">
+                    {{-- <div class="max-w-sm space-y-3">
                         <div>
                             <label for="hs-inline-leading-select-label" class="block text-sm font-medium mb-2">Pilih
                                 Acara</label>
@@ -135,7 +135,7 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="max-w-sm space-y-3">
                         <div>
                             <label for="hs-inline-leading-select-label" class="block text-sm font-medium mb-2">Pilih
@@ -322,10 +322,9 @@
         }
 
         $('#generateSertificate').click(function() {
-            let event = $('#events').val();
+            let event = {{$id}};
             let template = $('#template').val();
             let tanggal = $('#tanggal').val();
-
                 $.ajax({
                     url: '/api/generate-certificate',
                     type: 'POST',

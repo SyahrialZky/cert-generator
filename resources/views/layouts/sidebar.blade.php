@@ -29,14 +29,14 @@
                       Template
                   </a>
               </li>
-              <li>
+              {{-- <li>
                   <a href="{{ route('peserta.index') }}"
                       class="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg 
                       ">
                       <i class="fas fa-users mr-2"></i>
                       Peserta
                   </a>
-              </li>
+              </li> --}}
               <li>
                 <a href="{{ route('event.index') }}"
                     class="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg 
