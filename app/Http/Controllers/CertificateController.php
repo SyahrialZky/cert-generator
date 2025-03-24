@@ -83,6 +83,13 @@ class CertificateController extends Controller
     {
         try {
             $event = DB::table('events')->where('id', $request->input('event'))->first();
+            if ($event && $event->isGenerated) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Certificates have already been generated for this event. Regeneration is not allowed.'
+                ], 400);
+            }
+
             $template = DB::table('templates')
                 ->where('id', $request->input('template'))
                 ->select('file_path')
@@ -166,6 +173,10 @@ class CertificateController extends Controller
             }
 
             $zip->close();
+
+            DB::table('events')->where('id', $event->id)->update([
+                'isGenerated' => true
+            ]);
 
             return response()->json([
                 'success' => true,

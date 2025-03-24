@@ -31,6 +31,7 @@
                             <tr>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">ID</th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Nama Acara</th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Status Generate</th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Aksi</th>
                             </tr>
                         </thead>
@@ -124,6 +125,15 @@
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex' },
                     { data: 'nama', name: 'nama' },
+                    { 
+                        data: 'isGenerated', 
+                        name: 'isGenerated',
+                        render: function(data) {
+                            return data == 1 ? 
+                                '<span class="bg-green-300 px-2 rounded-sm">Sudah Generate</span>' : 
+                                '<span class="bg-red-300 px-2 rounded-sm">Belum Generate</span>';
+                        }
+                    },
                     { data: null, render: function(data) {
                         return `
                             <button onclick="updateEvent(${data.id})" class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-700">Update</button>
