@@ -109,7 +109,7 @@ class CertificateController extends Controller
 
             $manager = ImageManager::gd();
             $certificates = [];
-            $templatePath = public_path($template->file_path);
+            $templatePath = public_path('storage/' . $template->file_path);
             $fontPath = public_path('font/ArialMdm.ttf');
 
             $zipFileName = 'certificates_' . $event->id . '_' . date('Ymd_His') . '.zip';
