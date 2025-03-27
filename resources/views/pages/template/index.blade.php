@@ -394,8 +394,14 @@
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") 
                 },
                 success: function(response) {
-                    alert("Template berhasil dibuat!");
-                    location.reload(); 
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success!",
+                        text: "Template berhasil dibuat!",
+                        confirmButtonColor: "#3085d6"
+                    }).then(() => {
+                        location.reload();
+                    });
                 },
                 error: function(xhr) {
                     let errors = xhr.responseJSON?.errors;
@@ -404,14 +410,27 @@
                     } else {
                         alert("Terjadi kesalahan, coba lagi.");
                     }
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error!",
+                        text: response.message || "Something went wrong!"
+                    });
                 }
             });
         });
     });
 
         function deleteTemplate(id) {
-            if (!confirm("Apakah Anda yakin ingin menghapus template ini?")) return;
-
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This action cannot be undone.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
             let csrfToken = $('meta[name="csrf-token"]').attr('content');
 
             if (!csrfToken) {
@@ -426,16 +445,28 @@
                     'X-CSRF-TOKEN': csrfToken
                 },
                 success: function(response) {
-                    console.log("Response:", response);
-                    alert("Template berhasil dihapus!");
-                    location.reload(); 
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success!",
+                        text: "Template berhasil dihapus!",
+                        confirmButtonColor: "#3085d6"
+                    }).then(() => {
+                        location.reload();
+                    });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error:", xhr.responseText);
-                    alert("Gagal menghapus template.");
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error!",
+                        text: response.message || "Something went wrong!"
+                    });
                 }
             });
         }
+        });
+    }
+        
 
         function updateTemplate(templateId) {
             console.log("Fungsi updateTemplate dipanggil untuk ID:", templateId);
@@ -478,8 +509,13 @@
                     "X-HTTP-Method-Override": "PUT" 
                 },
                 success: function(response) {
-                    alert("Template berhasil diperbarui!");
-                    location.reload(); 
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success!",
+                        text: "Template berhasil diupdate!",
+                    }).then(() => {
+                        location.reload();
+                    });
                 },
                 error: function(xhr) {
                     let errors = xhr.responseJSON?.errors;
@@ -488,6 +524,11 @@
                     } else {
                         alert("Terjadi kesalahan, coba lagi.");
                     }
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error!",
+                        text: response.message || "Something went wrong!"
+                    });
                 }
             });
         });

@@ -150,34 +150,50 @@
         });
 
         $(document).ready(function() {
-        $("#create-form").submit(function(e) {
-                e.preventDefault(); 
+            $("#create-form").submit(function(e) {
+            e.preventDefault();
 
-                let formData = new FormData(this); 
+            let formData = new FormData(this); 
 
-                $.ajax({
-                    url: "/api/event/store", 
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") 
-                    },
-                    success: function(response) {
-                        alert("Event berhasil dibuat!");
-                        location.reload(); 
-                    },
-                    error: function(xhr) {
-                        let errors = xhr.responseJSON?.errors;
-                        if (errors) {
-                            alert("Gagal menyimpan event: " + JSON.stringify(errors));
-                        } else {
-                            alert("Terjadi kesalahan, coba lagi.");
-                        }
+            $.ajax({
+                url: "/api/event/store", 
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") 
+                },
+                success: function(response) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success!",
+                        text: "Event berhasil dibuat!",
+                        confirmButtonColor: "#3085d6"
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: function(xhr) {
+                    let errors = xhr.responseJSON?.errors;
+                    let errorMessage = "Terjadi kesalahan, coba lagi.";
+
+                    if (errors) {
+                        errorMessage = Object.values(errors).map(err => err.join(" ")).join("\n");
+                    } else if (xhr.responseJSON?.message) {
+                        errorMessage = xhr.responseJSON.message;
                     }
-                });
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: errorMessage,
+                        confirmButtonColor: "#d33"
+                    });
+                }
             });
+        });
+
         });
 
         function updateEvent(eventId) {
@@ -221,8 +237,14 @@
                     "X-HTTP-Method-Override": "PUT"
                 },
                 success: function(response) {
-                    alert("Event berhasil diperbarui!");
-                    location.reload();
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success!",
+                        text: "Event berhasil diupdate!",
+                        confirmButtonColor: "#3085d6"
+                    }).then(() => {
+                        location.reload();
+                    });
                 },
                 error: function(xhr) {
                     let errors = xhr.responseJSON?.errors;
@@ -231,30 +253,64 @@
                     } else {
                         alert("Terjadi kesalahan, coba lagi.");
                     }
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: errorMessage,
+                        confirmButtonColor: "#d33"
+                    });
                 }
             });
         });
     });
 
 
-        function deleteEvent(id) {
-            if (confirm('Apakah Anda yakin ingin menghapus event ini?')) {
-                $.ajax({
-                    url: `api/event/${id}`,
-                    type: 'DELETE',
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        alert("Event berhasil dihapus!");
+    function deleteEvent(eventId) {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/api/event/${eventId}`,
+                type: "DELETE",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+                },
+                success: function(response) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Deleted!",
+                        text: response.message
+                    }).then(() => {
                         location.reload();
-                    },
-                });
-            }
+                    });
+
+                    $(`#event-${eventId}`).remove();
+                    
+                },
+                error: function(xhr) {
+                    let response = xhr.responseJSON;
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error!",
+                        text: response.message || "Something went wrong!"
+                    });
+                }
+            });
         }
+    });
+}
+
+
 
         function detailEvent(eventId) {
-    window.location.href = `/event/${eventId}/peserta`;
-}
+            window.location.href = `/event/${eventId}/peserta`;
+        }
     </script>
 @endpush

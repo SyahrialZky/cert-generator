@@ -33,6 +33,9 @@
   <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+  {{-- Sweetalert2 --}}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css">
+
   @vite('resources/js/app.js')
   @vite('resources/css/app.css')
 
@@ -124,6 +127,10 @@
   <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <script src="https://preline.co/assets/js/hs-apexcharts-helpers.js"></script>
+
+
+  {{-- Sweetalert2  --}}
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
 
   <script>
     window.addEventListener("load", () => {

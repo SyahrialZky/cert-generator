@@ -273,7 +273,12 @@
             let eventId = getEventIdFromUrl();
 
             if (!eventId) {
-                alert("Event ID tidak ditemukan!");
+                Swal.fire({
+                        icon: "error",
+                        title: "Oops..",
+                        text: "Tidak dapat menemukan event terkait",
+                        confirmButtonColor: "#d33"
+                    });
                 return;
             }
             let table = $('#pesertaTable').DataTable({
@@ -349,7 +354,12 @@
                             );
                             window.location.href = response.zipUrl;
                         } else {
-                            alert("error generate sertificate")
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: "Error generate sertifikat",
+                                confirmButtonColor: "#d33"
+                            });
                         }
                     },
                     error: function(xhr, status, error) {
@@ -382,7 +392,11 @@
                 let file = $("#import-file")[0].files[0];
 
                 if (!file) {
-                    alert("Pilih file terlebih dahulu!");
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Warning!",
+                        text: "Harap pilih file excel untuk diimport!",
+                    });
                     return;
                 }
 
@@ -398,12 +412,23 @@
                         "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content")
                     },
                     success: function(response) {
-                        alert(response.message);
+                        Swal.fire({
+                        icon: "success",
+                        title: "Success!",
+                        text: "Data peserta berhasil diimport!",
+                        confirmButtonColor: "#3085d6"
+                    }).then(() => {
                         location.reload();
+                    });
                     },
                     error: function(xhr) {
                         console.error(xhr.responseText);
-                        alert("Terjadi kesalahan saat mengunggah file.");
+                        Swal.fire({
+                        icon: "error",
+                        title: "Terjadi kesalahan saat mengunggah file!",
+                        text: errorMessage,
+                        confirmButtonColor: "#d33"
+                    });
                     }
                 });
             });
