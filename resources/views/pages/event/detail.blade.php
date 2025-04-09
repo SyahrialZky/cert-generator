@@ -153,7 +153,7 @@
                     </div>
                     <div class="max-w-sm space-y-3">
                         <div>
-                            <label for="hs-inline-leading-select-label" class="block text-sm font-medium mb-2">Tanggal
+                            <label for="hs-inline-leading-select-label" class="block text-sm font-medium mb-2">Tanggal Mulai
                                 Acara</label>
                             <div class="relative">
                                 <input type="date" id="date" name="date"
@@ -161,6 +161,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="max-w-sm space-y-3">
+                        <div>
+                            <label for="hs-inline-leading-select-label" class="block text-sm font-medium mb-2">Tanggal Selesai
+                                Acara</label>
+                            <div class="relative">
+                                <input type="date" id="end_date" name="end_date"
+                                    class="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+                    </div> 
                 </div>
                 <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t">
                     <button type="button"
@@ -329,14 +339,17 @@
         $('#generateSertificate').click(function() {
             let event = {{$id}};
             let template = $('#template').val();
-            let tanggal = $('#tanggal').val();
+            let tanggal = $('#date').val();
+            let endDate = $('#end_date').val();
+            
                 $.ajax({
                     url: '/api/generate-certificate',
                     type: 'POST',
                     data: JSON.stringify({
                         event: event,
                         template: template,
-                        tanggal: tanggal
+                        tanggal: tanggal,   
+                        end_date: endDate
                     }),
                     contentType: 'application/json',
                     headers: {

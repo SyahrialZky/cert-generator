@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Certificate;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\ImageManager;
@@ -243,8 +244,18 @@ class CertificateController extends Controller
                 ], 404);
             }
 
-            $eventDate = $request->input('tanggal', now()->format('d F Y'));
-
+            // $eventDate = $request->input('tanggal', now()->format('d F Y'));
+            $start = $request->input('tanggal', now()->format('d F Y'));
+            $start = Carbon::parse($start)->format('d F Y');
+            $endRaw = $request->input('end_date');
+            $end = $endRaw ? Carbon::parse($endRaw)->format('d F Y') : null;
+            if ($end) {
+                $eventDate = $start . ' - ' . $end;
+            } else {
+                $eventDate = $start;
+            }
+            
+            
             $manager = ImageManager::gd();
             $certificates = [];
 
