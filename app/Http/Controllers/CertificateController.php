@@ -283,7 +283,7 @@ class CertificateController extends Controller
                     $font->color('#2664DC');
                 });
 
-                $image = $image->text($p->nama, 125, 360, function ($font) use ($fontPath) {
+                $image = $image->text($p->nama, 128, 360, function ($font) use ($fontPath) {
                     $font->file($fontPath);
                     $font->size(35);
                     $font->color('#000000');
@@ -295,7 +295,7 @@ class CertificateController extends Controller
                 //     $font->color('#000000');
                 // });
 
-                $image = $image->text($eventDate, 305, 412, function ($font) use ($fontPath) {
+                $image = $image->text($eventDate, 305, 413, function ($font) use ($fontPath) {
                     $font->file($fontPath);
                     $font->size(20);
                     $font->color('#2664DC');
