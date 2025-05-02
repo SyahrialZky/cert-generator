@@ -358,25 +358,26 @@
                     success: function(response) {
                         console.log(response);
 
-                        // if (response.success && response.zipUrl) {
-                        //     $('#downloadContainer').html(
-                        //         '<a href="' + response.zipUrl +
-                        //         '" class="btn btn-primary" download>' +
-                        //         '<i class="fa fa-download"></i> Download All Certificates (ZIP)' +
-                        //         '</a>'
-                        //     );
-                        //     window.location.href = response.zipUrl;
-                        // } else {
-                        //     Swal.fire({
-                        //         icon: "error",
-                        //         title: "Oops...",
-                        //         text: "Error generate sertifikat",
-                        //         confirmButtonColor: "#d33"
-                        //     });
-                        // }
+                        if (response.success && response.zipUrl) {
+                            $('#downloadContainer').html(
+                                '<a href="' + response.zipUrl +
+                                '" class="btn btn-primary" download>' +
+                                '<i class="fa fa-download"></i> Download All Certificates (ZIP)' +
+                                '</a>'
+                            );
+                            window.location.href = response.zipUrl;
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: "Error generate sertifikat",
+                                confirmButtonColor: "#d33"
+                            });
+                        }
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
+                        alert('Error generating certificates');
                         // let errorMsg = 'Error generating certificates';
                         // try {
                         //     const errorObj = JSON.parse(xhr.responseText);
