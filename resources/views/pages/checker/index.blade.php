@@ -14,7 +14,7 @@
         }
     </style>
 
-<meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
 </head>
 
@@ -102,12 +102,28 @@
                     },
                     success: function(response) {
                         Swal.fire({
-  title: "Certificate Valid",
-  icon: "success",
-  draggable: true
-});
+                            title: "Certificate Valid",
+                            icon: "success",
+                            draggable: true
+                        });
                     },
                     error: function(xhr, status, error) {
+                        Swal.fire({
+                            title: "Certificate Not Found",
+                            icon: "error",
+                            text: "Certificate not found or invalid.",
+                            showCancelButton: true,
+                            confirmButtonText: 'OK',
+                            cancelButtonText: 'Cancel'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // User clicked OK
+                                console.log('OK clicked');
+                            } else {
+                                // User clicked Cancel
+                                console.log('Cancel clicked');
+                            }
+                        })
                         console.error(xhr.responseText);
                     }
                 });
