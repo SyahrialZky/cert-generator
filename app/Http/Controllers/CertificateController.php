@@ -368,8 +368,7 @@ class CertificateController extends Controller
     public function checkCertificateNumber(Request $request)
     {
         $certificateNumber = $request->input('certificate_number');
-
-        $participant = DB::table('participants')
+        $participant = DB::table('certificates')
             ->where('certificate_number', $certificateNumber)
             ->first();
 

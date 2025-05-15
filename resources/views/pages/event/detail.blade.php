@@ -377,15 +377,16 @@
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
-                        let errorMsg = 'Error generating certificates';
-                        try {
-                            const errorObj = JSON.parse(xhr.responseText);
-                            if (errorObj.message) {
-                                errorMsg = errorObj.message;
-                            }
-                        } catch (e) {}
-                        $('#generateStatus').html('<div class="alert alert-danger">' +
-                            errorMsg + '</div>');
+                        alert('Error generating certificates');
+                        // let errorMsg = 'Error generating certificates';
+                        // try {
+                        //     const errorObj = JSON.parse(xhr.responseText);
+                        //     if (errorObj.message) {
+                        //         errorMsg = errorObj.message;
+                        //     }
+                        // } catch (e) {}
+                        // $('#generateStatus').html('<div class="alert alert-danger">' +
+                        //     errorMsg + '</div>');
                     }
                 });
             });
