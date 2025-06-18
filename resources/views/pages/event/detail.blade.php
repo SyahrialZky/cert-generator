@@ -295,7 +295,7 @@
                 processing: true,
                 serverSide: false,
                 ajax: {
-                    url: `http://127.0.0.1:8000/api/event/${eventId}/peserta`,
+                    url: `http://127.0.0.1:8080/api/event/${eventId}/peserta`,
                     type: 'GET',
                     dataSrc: function(json) {
                         if (json.success) {

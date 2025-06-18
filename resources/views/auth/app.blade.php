@@ -6,6 +6,7 @@
     <title>@yield('title')</title>
     @vite('resources/css/app.css')
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
