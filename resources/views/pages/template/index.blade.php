@@ -478,7 +478,6 @@
             });
         }
 
-
         function updateTemplate(templateId) {
             console.log("Fungsi updateTemplate dipanggil untuk ID:", templateId);
 
@@ -502,6 +501,7 @@
                 }
             });
         }
+        
         $(document).ready(function() {
             $("#updateTemplateForm").submit(function(e) {
                 e.preventDefault();

@@ -48,8 +48,7 @@
                         </svg>
                     </button>
                 </div>
-                <form id="create-peserta-form" method="POST">
-                    @csrf
+                <form>
                     <div class="p-4 overflow-y-auto space-y-3">
                         <div>
                             <label for="nama" class="block text-sm font-medium">Nama</label>
@@ -65,7 +64,7 @@
                                 placeholder="Masukkan Email">
                         </div>
 
-                        <div>
+                        {{-- <div>
                             <label for="event_id" class="block text-sm font-medium">Acara</label>
                             <select id="event_id" name="event_id" required
                                 class="py-3 px-4 block w-full border-gray-200 shadow-sm rounded-lg focus:ring-blue-500 focus:border-blue-500">
@@ -74,7 +73,7 @@
                                     <option value="{{ $event->id }}">{{ $event->name }}</option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
 
                         <div>
                             <label for="sebagai" class="block text-sm font-medium">Sebagai</label>
@@ -89,6 +88,7 @@
                             class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 hover:bg-gray-50 focus:outline-none"
                             data-hs-overlay="#modal-create">Close</button>
                         <button type="submit"
+                            id="createPesertaBtn"
                             class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-blue-500 text-white hover:bg-blue-600 focus:outline-none">Create</button>
                     </div>
                 </form>
@@ -153,7 +153,8 @@
                     </div>
                     <div class="max-w-sm space-y-3">
                         <div>
-                            <label for="hs-inline-leading-select-label" class="block text-sm font-medium mb-2">Tanggal Mulai
+                            <label for="hs-inline-leading-select-label" class="block text-sm font-medium mb-2">Tanggal
+                                Mulai
                                 Acara</label>
                             <div class="relative">
                                 <input type="date" id="date" name="date"
@@ -163,14 +164,15 @@
                     </div>
                     <div class="max-w-sm space-y-3">
                         <div>
-                            <label for="hs-inline-leading-select-label" class="block text-sm font-medium mb-2">Tanggal Selesai
+                            <label for="hs-inline-leading-select-label" class="block text-sm font-medium mb-2">Tanggal
+                                Selesai
                                 Acara</label>
                             <div class="relative">
                                 <input type="date" id="end_date" name="end_date"
                                     class="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             </div>
                         </div>
-                    </div> 
+                    </div>
                 </div>
                 <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t">
                     <button type="button"
@@ -281,21 +283,24 @@
     <script>
         $(document).ready(function() {
             let eventId = getEventIdFromUrl();
+            const baseUrl = "{{ request()->getSchemeAndHttpHost() }}/";
 
             if (!eventId) {
                 Swal.fire({
-                        icon: "error",
-                        title: "Oops..",
-                        text: "Tidak dapat menemukan event terkait",
-                        confirmButtonColor: "#d33"
-                    });
+                    icon: "error",
+                    title: "Oops..",
+                    text: "Tidak dapat menemukan event terkait",
+                    confirmButtonColor: "#d33"
+                });
                 return;
             }
+            
             let table = $('#pesertaTable').DataTable({
                 processing: true,
                 serverSide: false,
                 ajax: {
-                    url: `http://127.0.0.1:8080/api/event/${eventId}/peserta`,
+                    // url: `http://127.0.0.1:8080/api/event/${eventId}/peserta`,
+                    url: baseUrl + `api/event/${eventId}/peserta`,
                     type: 'GET',
                     dataSrc: function(json) {
                         if (json.success) {
@@ -328,6 +333,69 @@
                     },
                 ]
             });
+
+            $('#createPesertaBtn').click(function(e) {
+                e.preventDefault();
+
+                let nama = $('#nama').val();
+                let email = $('#email').val();
+                let event_id = eventId;
+                let sebagai = $('#sebagai').val();
+
+                if (!nama || !email || !event_id || !sebagai) {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Warning!",
+                        text: "Harap isi semua field!",
+                    });
+                    return;
+                }
+
+                $.ajax({
+                    url: baseUrl + 'api/peserta/store',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        nama: nama,
+                        email: email,
+                        event_id: event_id,
+                        sebagai: sebagai
+                    }),
+                    contentType: 'application/json',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Success!",
+                                text: "Peserta berhasil ditambahkan!",
+                                confirmButtonColor: "#3085d6"
+                            }).then(() => {
+                                window.location.reload();
+                                table.ajax.reload();
+                                $('#modal-create').hide();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error!",
+                                text: response.message || "Gagal menambahkan peserta.",
+                                confirmButtonColor: "#d33"
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error!",
+                            text: "Terjadi kesalahan saat menambahkan peserta.",
+                            confirmButtonColor: "#d33"
+                        });
+                    }
+                });
+            });
         });
 
         function getEventIdFromUrl() {
@@ -337,59 +405,56 @@
         }
 
         $('#generateSertificate').click(function() {
-            let event = {{$id}};
+            let event = {{ $id }};
             let template = $('#template').val();
             let tanggal = $('#date').val();
             let endDate = $('#end_date').val();
-            
-                $.ajax({
-                    url: '/api/generate-certificate',
-                    type: 'POST',
-                    data: JSON.stringify({
-                        event: event,
-                        template: template,
-                        tanggal: tanggal,   
-                        end_date: endDate
-                    }),
-                    contentType: 'application/json',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        console.log(response);
 
-                        if (response.success && response.zipUrl) {
-                            $('#downloadContainer').html(
-                                '<a href="' + response.zipUrl +
-                                '" class="btn btn-primary" download>' +
-                                '<i class="fa fa-download"></i> Download All Certificates (ZIP)' +
-                                '</a>'
-                            );
-                            window.location.href = response.zipUrl;
-                        } else {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Oops...",
-                                text: "Error generate sertifikat",
-                                confirmButtonColor: "#d33"
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
-                        alert('Error generating certificates');
-                        // let errorMsg = 'Error generating certificates';
-                        // try {
-                        //     const errorObj = JSON.parse(xhr.responseText);
-                        //     if (errorObj.message) {
-                        //         errorMsg = errorObj.message;
-                        //     }
-                        // } catch (e) {}
-                        // $('#generateStatus').html('<div class="alert alert-danger">' +
-                        //     errorMsg + '</div>');
+            $.ajax({
+                url: '/api/generate-certificate',
+                type: 'POST',
+                data: JSON.stringify({
+                    event: event,
+                    template: template,
+                    tanggal: tanggal,
+                    end_date: endDate
+                }),
+                contentType: 'application/json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    if (response.success && response.zipUrl) {
+                        $('#downloadContainer').html(
+                            '<a href="' + response.zipUrl +
+                            '" class="btn btn-primary" download>' +
+                            '<i class="fa fa-download"></i> Download All Certificates (ZIP)' +
+                            '</a>'
+                        );
+                        window.location.href = response.zipUrl;
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Error generate sertifikat" + (response.message ? ': ' + response.message : ''),
+                            confirmButtonColor: "#d33"
+                        });
                     }
-                });
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    let errorMsg = 'Error generating certificates';
+                    try {
+                        const errorObj = JSON.parse(xhr.responseText);
+                        if (errorObj.message) {
+                            errorMsg = errorObj.message;
+                        }
+                    } catch (e) {}
+                    $('#generateStatus').html('<div class="alert alert-danger">' +
+                        errorMsg + '</div>');
+                }
             });
+        });
 
         $(document).ready(function() {
             $("#import-btn").on("click", function(e) {
@@ -427,22 +492,22 @@
                     },
                     success: function(response) {
                         Swal.fire({
-                        icon: "success",
-                        title: "Success!",
-                        text: "Data peserta berhasil diimport!",
-                        confirmButtonColor: "#3085d6"
-                    }).then(() => {
-                        location.reload();
-                    });
+                            icon: "success",
+                            title: "Success!",
+                            text: "Data peserta berhasil diimport!",
+                            confirmButtonColor: "#3085d6"
+                        }).then(() => {
+                            location.reload();
+                        });
                     },
                     error: function(xhr) {
                         console.error(xhr.responseText);
                         Swal.fire({
-                        icon: "error",
-                        title: "Terjadi kesalahan saat mengunggah file!",
-                        text: errorMessage,
-                        confirmButtonColor: "#d33"
-                    });
+                            icon: "error",
+                            title: "Terjadi kesalahan saat mengunggah file!",
+                            text: errorMessage,
+                            confirmButtonColor: "#d33"
+                        });
                     }
                 });
             });

@@ -210,14 +210,14 @@ class CertificateController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => 'Event not found.'
-                ], 404);
+                ], 200);
             }
 
             if ($event->isGenerated) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Certificates have already been generated for this event. Regeneration is not allowed.'
-                ], 400);
+                ], 200);
             }
 
             $template = DB::table('templates')

@@ -75,16 +75,27 @@ class PesertaController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:participants,email',
-            'event_id' => 'required|exists:events,id',
-            'sebagai' => 'required|string|max:100',
-        ]);
-
-        $participant = Participant::create($request->all());
-
-        return response()->json($participant, 201);
+        try {
+            $request->validate([
+                'nama' => 'required|string|max:255',
+                'email' => 'required|email|unique:participants,email',
+                'event_id' => 'required|exists:events,id',
+                'sebagai' => 'required|string|max:100',
+            ]);
+            $participant = Participant::create($request->all());
+            $eventId = $request->event_id;
+            return response()
+                ->json([
+                    'success' => true,
+                    'message' => 'Peserta berhasil ditambahkan',
+                    'participant' => $participant
+                ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menambahkan peserta: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function show($id)
