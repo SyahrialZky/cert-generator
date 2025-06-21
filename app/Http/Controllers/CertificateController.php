@@ -337,9 +337,9 @@ class CertificateController extends Controller
 
             $zip->close();
 
-            // DB::table('events')->where('id', $event->id)->update([
-            //     'isGenerated' => true
-            // ]);
+            DB::table('events')->where('id', $event->id)->update([
+                'isGenerated' => true
+            ]);
 
             return response()->json([
                 'success' => true,
