@@ -336,7 +336,6 @@
                                         <img src="${storageUrl}" alt="Preview" width="100" class="rounded-lg shadow-sm">
                                     </a>`;
                             } else {
-                                // return `<a href="${storageUrl}" target="_blank" class="text-blue-500 underline">View File</a>`;
                                 return `<p class="text-gray-500">Image not available</p>`;
                             }
                         }
